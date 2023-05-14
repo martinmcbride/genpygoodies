@@ -1,6 +1,6 @@
 # Author:  Martin McBride
-# Created: 2020-12-28
-# Copyright (C) 2020, Martin McBride
+# Created: 2023-05-14
+# Copyright (C) 2023, Martin McBride
 # License: MIT
 
 from generativepy.utils import temp_file

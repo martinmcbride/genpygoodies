@@ -1,3 +1,8 @@
+# Author:  Martin McBride
+# Created: 2023-05-14
+# Copyright (C) 2023, Martin McBride
+# License: MIT
+
 import unittest
 loader = unittest.TestLoader()
 start_dir = './'
