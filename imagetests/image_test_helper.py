@@ -31,7 +31,7 @@ def run_image_test(name, creator):
     :return:
     """
     # Create test output folder
-    out_folder_name = 'genpy-test-images'
+    out_folder_name = 'genpygoodies-test-images'
     ref_folder_name = 'images'
     out_folder = temp_file(out_folder_name)
     Path(out_folder).mkdir(exist_ok=True)
