@@ -41,9 +41,13 @@ def run_image_test(name, creator):
     ref_file = os.path.join(ref_folder_name, name)
     if Path(out_file).exists():
         print("WARNING temp file {} already exists".format(out_file))
-    if not Path(ref_file).exists():
-        print("WARNING reference file {} doesn't exist".format(ref_file))
 
     # Create the test image file
     creator(out_file)
+
+    # Can't chack if reference file not there, so fail tehe test
+    if not Path(ref_file).exists():
+        print("WARNING reference file {} doesn't exist".format(ref_file))
+        return False
+
     return compare_images(out_file, ref_file)
