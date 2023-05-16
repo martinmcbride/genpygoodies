@@ -15,7 +15,7 @@ from typing import Union
 
 from generativepy.color import Color
 from generativepy.drawing import CENTER, MIDDLE
-from generativepy.geometry import Circle, Text, Line, Bezier
+from generativepy.geometry import Circle, Text, Line, Bezier, ParallelMarker
 from generativepy.math import Vector as V
 
 
@@ -52,37 +52,59 @@ class Vertex:
 
 class Edge:
 
-    def __init__(self, start, end, directed=False, weighted=False, weight=0, curve=False, curvature=1,
-                 color=None, lw=None):
+    def __init__(self, start, end, directed=False, weight=None, offset=None, curve=False, curvature=1,
+                 color=None, lw=None, font=None, text_size=None):
         self.start = start
         self.end = end
         self.directed = directed
-        self.weighted = weighted
         self.weight = weight
+        self.offset = offset
         self.curve = curve
         self.curvature = curvature
         self.color = color
         self.lw = lw
+        self.font = font
+        self.text_size = text_size
 
-    def draw(self, ctx, vertices, color, lw):
+    def draw(self, ctx, vertices, color, lw, font, text_size):
         color = color if self.color is None else self.color
         lw = lw if self.lw is None else self.lw
+        font = font if self.font is None else self.font
+        text_size = text_size if self.text_size is None else self.text_size
+        p0 = V(vertices[self.start].position)
+        p1 = V(vertices[self.end].position)
+        direction = p1 - p0
         if not self.curve:
             Line(ctx).of_start_end(vertices[self.start].position, vertices[self.end].position).stroke(color, lw)
+            if self.directed:
+                ParallelMarker(ctx).of_start_end(vertices[self.start].position, vertices[self.end].position).with_length(lw*4).stroke(color, lw)
+            if self.weight is not None:
+                if self.offset is not None:
+                    print("---", self.offset, self.weight)
+                offset = V.polar(text_size, direction.angle - math.radians(90)) if self.offset is None else V(self.offset)
+                print("-", offset, self.weight)
+                Text(ctx).of(str(self.weight), (p0+p1)/2).align(CENTER, MIDDLE).size(text_size).offset(*offset).font(font).fill(color)
         else:
-            p0 = V(vertices[self.start].position)
-            p1 = V(vertices[self.end].position)
-            self.arc_between_points(ctx, p0, p1, color, lw)
+            apex = self.arc_between_points(ctx, p0, p1, color, lw)
+            if self.directed:
+                ParallelMarker(ctx).of_start_end(apex - direction, apex + direction).with_length(lw * 4).stroke(color, lw)
+            if self.weight is not None:
+                if self.offset is not None:
+                    print("+++", self.offset, self.weight)
+                offset = V.polar(text_size, direction.angle - math.radians(90)) if self.offset is None else V(self.offset)
+                print("+", offset, self.weight)
+                Text(ctx).of(str(self.weight), apex).align(CENTER, MIDDLE).size(text_size).offset(*offset).font(font).fill(color)
 
     def arc_between_points(self, ctx, p0, p1, color, lw):
         x, y = p1 - p0
-        a = (p1 - p0).angle
+        a = (p1 - p0).angle - math.radians(90)
         l = (p1 - p0).length
         radius = l/(1.2*self.curvature)
         b = math.asin(l/(2*radius))
         h = radius*math.cos(b)
         c = p0 + V(x/2 - h*(y/l), y/2 + h*(x/l))
-        Circle(ctx).of_center_radius(c, radius).as_arc(a-b-math.radians(90), a+b-math.radians(90)).stroke(color, lw)
+        Circle(ctx).of_center_radius(c, radius).as_arc(a-b, a+b).stroke(color, lw)
+        return c + V.polar(radius, a)
 
 
 
@@ -106,6 +128,6 @@ class Graph:
 
     def draw(self, ctx: object):
         for edge in self.edges:
-            edge.draw(ctx, self.vertices, self.fgcolor, self.lw)
+            edge.draw(ctx, self.vertices, self.fgcolor, self.lw, self.font, self.text_size)
         for vertex in self.vertices:
             vertex.draw(ctx, self.fgcolor, self.bgcolor, self.radius, self.lw, self.font, self.text_size)
