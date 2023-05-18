@@ -1,3 +1,4 @@
+import math
 import unittest
 
 from generativepy.color import Color
@@ -196,11 +197,11 @@ class TestGraphImages(unittest.TestCase):
             graph.add(Vertex((100, 300), "B"))
             graph.add(Vertex((200, 50), "C"))
             graph.add(Vertex((350, 350), "D"))
-            graph.add(Edge(0, 1, curve=True, weight=10))
-            graph.add(Edge(1, 0, directed=True, weight=20))
+            graph.add(Edge(0, 1, curve=True, weight=1))
+            graph.add(Edge(1, 0, directed=True, weight=2))
             graph.add(Edge(2, 3, curve=True))
             graph.add(Edge(2, 3, weight="a"))
-            graph.add(Edge(2, 3, weight="b", offset=(30, 45)))
+            graph.add(Edge(2, 3, weight="long", offset=(-40, 20)))
             graph.draw(ctx)
 
             with Transform(ctx).translate(400, 0):
@@ -222,4 +223,37 @@ class TestGraphImages(unittest.TestCase):
             make_image(file, draw, 800, 400)
 
         self.assertTrue(run_image_test('test_weighted_graph.png', creator))
+
+    def test_loop_graph(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+
+            graph = Graph()
+            graph.add(Vertex((100, 100), "A"))
+            graph.add(Vertex((100, 300), "B"))
+            graph.add(Vertex((300, 50), "C"))
+            graph.add(Vertex((350, 350), "D"))
+            graph.add(Edge(0, 0))
+            graph.add(Edge(1, 1, loop_angle=math.radians(120), directed=1))
+            graph.add(Edge(1, 1, loop_angle=math.radians(270)))
+            graph.add(Edge(3, 3, loop_angle=math.radians(-135), weight=2))
+            graph.draw(ctx)
+
+            with Transform(ctx).translate(400, 0):
+                graph = Graph(fgcolor=Color("blue"), bgcolor=Color("yellow").light1, lw=6, radius=40,
+                              font="Times New Roman", text_size=40)
+                graph.add(Vertex((100, 100), "A"))
+                graph.add(Vertex((100, 300), "B"))
+                graph.add(Vertex((300, 50), "C"))
+                graph.add(Vertex((350, 350), "D"))
+                graph.add(Edge(0, 0))
+                graph.add(Edge(1, 1, loop_angle=math.radians(120), directed=1))
+                graph.add(Edge(1, 1, loop_angle=math.radians(270)))
+                graph.add(Edge(3, 3, loop_angle=math.radians(-135), weight=2))
+                graph.draw(ctx)
+
+        def creator(file):
+            make_image(file, draw, 800, 400)
+
+        self.assertTrue(run_image_test('test_loop_graph.png', creator))
 
