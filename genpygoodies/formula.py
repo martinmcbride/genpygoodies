@@ -36,7 +36,7 @@ class formula_zoom_in():
         """
         global _FORMULA_INDEX
         _FORMULA_INDEX += 1
-        name = "formula" + str(FORMULA_INDEX)
+        name = "formula" + str(_FORMULA_INDEX)
         self.image, self.size = rasterise_formula(name, formula, color, dpi=dpi, packages=packages)
         self.position = position
         self.scale = Tween(initial_scale).wait(appear_time).to_d(1, scale_duration)
@@ -57,7 +57,7 @@ class formula_fade_in():
     def __init__(self, formula, position, color, appear_time=0, appear_duration=1, dpi=600, disappear_time=None, fade_duration=1):
         global _FORMULA_INDEX
         _FORMULA_INDEX += 1
-        name = "formula" + str(FORMULA_INDEX)
+        name = "formula" + str(_FORMULA_INDEX)
         self.image, self.size = rasterise_formula(name, formula, color, dpi=dpi)
         self.position = position
         self.alpha = Tween(0).wait(appear_time).to_d(1, appear_duration)
