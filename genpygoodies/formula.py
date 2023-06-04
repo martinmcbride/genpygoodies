@@ -14,7 +14,7 @@ from generativepy.formulas import rasterise_formula
 from generativepy.tween import Tween
 from generativepy.geometry import Image
 
-FORMULA_INDEX = 0 # Global index used to create temp filenames for formulas
+_FORMULA_INDEX = 0 # Global index used to create temp filenames for formulas
 
 class formula_zoom_in():
 
@@ -55,8 +55,8 @@ class formula_zoom_in():
 class formula_fade_in():
 
     def __init__(self, formula, position, color, appear_time=0, appear_duration=1, dpi=600, disappear_time=None, fade_duration=1):
-        global FORMULA_INDEX
-        FORMULA_INDEX += 1
+        global _FORMULA_INDEX
+        _FORMULA_INDEX += 1
         name = "formula" + str(FORMULA_INDEX)
         self.image, self.size = rasterise_formula(name, formula, color, dpi=dpi)
         self.position = position
