@@ -10,11 +10,56 @@ The code converts a formula from Latex to a PNG image that is then rendered as a
 time-consuming (typically it takes a few seconds). When making movies is best to avoid creating formulas per frame, if
 possible. It is better to create a formula image just once outside the draw function.
 """
+from generativepy.color import Color
+from generativepy.drawing import setup, make_image
 from generativepy.formulas import rasterise_formula
 from generativepy.tween import Tween
 from generativepy.geometry import Image
 
-_FORMULA_INDEX = 0 # Global index used to create temp filenames for formulas
+_FORMULA_INDEX = 0 # Global index used to create temp filenames for formulas. Increment after each use
+
+def make_formulas_png(filepath, formulas, color, dpi=600, gap=50, background=Color(1), packages=None):
+    """
+    Create a PNG image of a list of latex formulas.
+
+    The formulas will be left aligned. The image will be sized so that there is a border of `gap` pixels around the formulas
+    in the final image. If there is more than one formula, each will be separated by `gap` pixels horizontally
+
+    **Parameters**
+
+    * `formulas`: list of str - Latex formula
+    * `color`: Color - Colour of formula.
+    * `dpi`: number - Controls formula size. See formula module of generativepy documentation.
+    * `gap`: number - Controls the width of the border around the edge of the formulas, and also the horizontal gap between the formulas.
+    * `packages`: sequence of str - tuple containing any required additional latex packages
+
+    **Returns**
+
+    A tuple (width, height) indicating the pixel size of the final image.
+
+    """
+    global _FORMULA_INDEX
+    formula_count = len(formulas)
+    names = ["formula" + str(_FORMULA_INDEX + i) for i in range(formula_count)]
+    _FORMULA_INDEX += formula_count
+
+    images, sizes = zip(*[rasterise_formula(name, formula, color, dpi=dpi, packages=packages) for name, formula in zip(names, formulas)])
+
+    height = sum([size[1] for size in sizes]) + (formula_count + 1)*gap
+    width = max([size[0] for size in sizes]) + 2*gap
+
+    def draw(ctx, pixel_width, pixel_height, fn, frame_count):
+        setup(ctx, pixel_width, pixel_height, background=background)
+
+        ypos = gap
+        for image, size in zip(images, sizes):
+            Image(ctx).of_file_position(image, (gap, ypos)).paint()
+            ypos += size[1] + gap
+
+    make_image(filepath, draw, width, height)
+    return width, height
+
+
 
 class formula_zoom_in():
 
@@ -47,8 +92,8 @@ class formula_zoom_in():
         Fading is not currently implemented. The formula will behave as if the `fade_duration` is zero.
         """
         global _FORMULA_INDEX
-        _FORMULA_INDEX += 1
         name = "formula" + str(_FORMULA_INDEX)
+        _FORMULA_INDEX += 1
         self.image, self.size = rasterise_formula(name, formula, color, dpi=dpi, packages=packages)
         self.position = position
         self.scale = Tween(initial_scale).wait(appear_time).to_d(1, scale_duration)
@@ -127,8 +172,8 @@ class formula_fade_in():
         parameters.
         """
         global _FORMULA_INDEX
-        _FORMULA_INDEX += 1
         name = "formula" + str(_FORMULA_INDEX)
+        _FORMULA_INDEX += 1
         self.image, self.size = rasterise_formula(name, formula, color, dpi=dpi)
         self.position = position
         self.alpha = Tween(0).wait(appear_time).to_d(1, appear_duration)
