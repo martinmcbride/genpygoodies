@@ -4,7 +4,7 @@
 # License: MIT
 import math
 
-from generativepy.geometry import Polygon, Circle
+from generativepy.geometry import Polygon, Circle, Line
 from generativepy.math import Vector as V
 
 from genpygoodies.diagrams.symbol import Symbol
@@ -54,22 +54,18 @@ class And(Symbol):
         self._connectors = (((0, self.height/4), (0, self.height*3/4)), ((self.width + output_offset, self.height/2),))
 
     def draw(self, ctx):
-        a = V(self.position) +  V(self.height/2, 0)
+        a = V(self.position) +  V(0, self.height)
         b = V(self.position)
-        c = V(self.position) + V(0, self.height)
-        d = V(self.position) + V(self.height/2, self.height)
         centre = V(self.position) + V(self.height/2, self.height/2)
-        bubble_centre = a + V(self.width + self.bubble_radius, self.height/2)
-        (Polygon(ctx)
-         .of_points((a, b, c, d))
-         .open()
-         .fill(self.fillparams.pattern, self.fillparams.fill_rule)
-         .stroke(self.strokeparams.pattern, self.strokeparams.line_width, self.strokeparams.dash, self.strokeparams.cap, self.strokeparams.join,
-                 self.strokeparams.miter_limit)
+        bubble_centre = V(self.position) + V(self.width + self.bubble_radius, self.height/2)
+        (Line(ctx)
+         .of_start_end(a, b)
+         .add()
          )
         (Circle(ctx)
          .of_center_radius(centre, self.height/2)
          .as_arc(math.radians(-90), math.radians(90))
+         .extend_path(close=True)
          .fill(self.fillparams.pattern, self.fillparams.fill_rule)
          .stroke(self.strokeparams.pattern, self.strokeparams.line_width, self.strokeparams.dash, self.strokeparams.cap, self.strokeparams.join,
                  self.strokeparams.miter_limit)
@@ -83,7 +79,7 @@ class And(Symbol):
              )
 
     def label_pos(self):
-        return self.position + V(self.width/3, self.height/2)
+        return self.position + V(2*self.width/5, self.height/2)
 
     def get_default_height(self):
         return self.width
