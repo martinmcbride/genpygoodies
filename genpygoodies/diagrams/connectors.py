@@ -7,7 +7,7 @@ Various line connectors
 """
 
 from generativepy.drawing import SQUARE, MITER
-from generativepy.geometry import FillParameters, StrokeParameters, Line, Circle
+from generativepy.geometry import FillParameters, StrokeParameters, Line, Circle, Polygon
 from generativepy.color import Color
 from generativepy.math import Vector as V
 
@@ -60,6 +60,68 @@ class Connector():
         """
         (Line(ctx)
          .of_start_end(self.start, self.end)
+         .stroke(self.strokeparams.pattern, self.strokeparams.line_width, self.strokeparams.dash, self.strokeparams.cap, self.strokeparams.join,
+                 self.strokeparams.miter_limit)
+         )
+
+
+class ElbowConnector():
+    """
+    A connector that joins two points with a stepped connector.
+    """
+
+    def __init__(self, start, end, position, horizontal=True):
+        """
+        Initialise a connector with the start and end points
+        Args:
+            start: Start point of connector, sequence of 2 numbers.
+            end: End point of connector, sequence of 2 numbers.
+            position: Position of the step, number 0 to 1
+        """
+        self.start = start
+        self.end = end
+        
+        if horizontal:
+            self.p1 = (start[0] + (end[0] - start[0])*position, start[1])
+            self.p2 = (start[0] + (end[0] - start[0])*position, end[1])
+        else:
+            self.p1 = (start[0], start[1] + (end[1] - start[1])*position)
+            self.p2 = (end[0], start[1] + (end[1] - start[1])*position)
+
+    def strokestyle(self, pattern=Color(0), line_width=1, dash=None, cap=SQUARE, join=MITER, miter_limit=None):
+        """
+        Sets the stroke style of the connector
+        Args:
+            pattern: Pattern to fill the line, normally a `Color` object. Alternatively, if a StrokeParameters object is supplied as a `pattern`, the style
+            will be taken from the StrokeParameters object and the remaining parameters will be ignored.
+            line_width: Width of connection line in userspace units, Number.
+            dash: Dash sequence as defined in generativepy.drawing module. Sequnce of numbers.
+            cap: Line cap as defined in generativepy.drawing module. Integer.
+            join:  Line join as defined in generativepy.drawing module. Integer.
+            miter_limit: Smallest angle that mitre join style can apply to. If mitre style is selected but the angle is too snale, bevel style wil be used instead.
+
+        Returns:
+            self
+        """
+        if isinstance(pattern, StrokeParameters):
+            self.strokeparams = pattern
+        else:
+            self.strokeparams = StrokeParameters(pattern, line_width, dash, cap, join, miter_limit)
+        return self
+
+    def draw(self, ctx):
+        """
+        Draw the item on the supplied drawing context
+
+        Args:
+            ctx: The drawing context, a PyCairo Context object.
+
+        Returns:
+            None
+        """
+        (Polygon(ctx)
+         .of_points((self.start, self.p1, self.p2, self.end))
+         .open()
          .stroke(self.strokeparams.pattern, self.strokeparams.line_width, self.strokeparams.dash, self.strokeparams.cap, self.strokeparams.join,
                  self.strokeparams.miter_limit)
          )

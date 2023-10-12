@@ -7,7 +7,7 @@ from generativepy.geometry import Line, Text, Circle, FillParameters, StrokePara
 
 from generativepy.math import Vector as V
 
-from genpygoodies.diagrams.connectors import Connector, Connection
+from genpygoodies.diagrams.connectors import Connector, Connection, ElbowConnector
 from genpygoodies.diagrams.logicgates import Buffer, And, Or, Xor
 from image_test_helper import run_image_test
 
@@ -37,4 +37,19 @@ class TestConnectors(unittest.TestCase):
             make_image(file, draw, 400, 300)
 
         self.assertTrue(run_image_test('test_connector_connection.png', creator))
+
+    def test_elbow_connector(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+
+            a = (100, 100)
+            b = (200, 150)
+            ElbowConnector(a, b, 0.3).strokestyle(green_stroke).draw(ctx)
+            with Transform(ctx).translate(50, 70):
+                ElbowConnector(a, b, 0.9, False).strokestyle(green_stroke).draw(ctx)
+
+        def creator(file):
+            make_image(file, draw, 400, 300)
+
+        self.assertTrue(run_image_test('test_elbow_connector.png', creator))
 
