@@ -64,6 +64,9 @@ class Connector():
                  self.strokeparams.miter_limit)
          )
 
+        return self
+
+
 
 class ElbowConnector():
     """
@@ -126,6 +129,9 @@ class ElbowConnector():
                  self.strokeparams.miter_limit)
          )
 
+        return self
+
+
 
 class Connection():
     """
@@ -176,3 +182,6 @@ class Connection():
          .of_center_radius(self.position, self.radius)
          .fill(self.fillparams.pattern, self.fillparams.fill_rule)
          )
+
+        return self
+

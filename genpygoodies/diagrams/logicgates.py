@@ -47,6 +47,7 @@ class Buffer(Symbol):
              .stroke(self.strokeparams.pattern, self.strokeparams.line_width, self.strokeparams.dash, self.strokeparams.cap, self.strokeparams.join,
                      self.strokeparams.miter_limit)
              )
+        return self
 
     def label_pos(self):
         return self.position + V(self.width/3, self.height/2)
@@ -99,6 +100,7 @@ class And(Symbol):
              .stroke(self.strokeparams.pattern, self.strokeparams.line_width, self.strokeparams.dash, self.strokeparams.cap, self.strokeparams.join,
                      self.strokeparams.miter_limit)
              )
+        return self
 
     def label_pos(self):
         return self.position + V(2*self.width/5, self.height/2)
@@ -154,6 +156,7 @@ class Or(Symbol):
              .stroke(self.strokeparams.pattern, self.strokeparams.line_width, self.strokeparams.dash, self.strokeparams.cap, self.strokeparams.join,
                      self.strokeparams.miter_limit)
              )
+        return self
 
     def label_pos(self):
         return self.position + V(2*self.width/5, self.height/2)
@@ -216,6 +219,7 @@ class Xor(Symbol):
              .stroke(self.strokeparams.pattern, self.strokeparams.line_width, self.strokeparams.dash, self.strokeparams.cap, self.strokeparams.join,
                      self.strokeparams.miter_limit)
              )
+        return self
 
     def label_pos(self):
         return self.position + V(2*self.width/5, self.height/2)
