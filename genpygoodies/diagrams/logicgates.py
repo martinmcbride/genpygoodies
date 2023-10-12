@@ -11,10 +11,18 @@ from genpygoodies.diagrams.symbol import Symbol
 
 class Buffer(Symbol):
     """
-    Draws a logic gate, either Buffer or a NOT gate, depending whether the `invert` parameter is set in teh constructor.
+    Draws a logic gate, either Buffer or a NOT gate, depending whether the `invert` parameter is set in the constructor.
     """
 
     def __init__(self, position, width, height=None, invert=False):
+        """
+        Initialise a buffer object
+        Args:
+            position: Position of top right boundary of symbol. Tuple of numbers.
+            width: The width of the symbol. Number.
+            height: The height of the symbol. If `None` the symbol will use the default height for the supplied width.  Number.
+            invert: True if the gate is inverting, in which case a bobble is added to the output.
+        """
         super().__init__(position, width, height)
         self.bubble_radius = self.width/10
         self.invert = invert
@@ -49,10 +57,18 @@ class Buffer(Symbol):
 
 class And(Symbol):
     """
-    Draws a logic gate, either an AND or a NAND gate, depending whether the `invert` parameter is set in teh constructor.
+    Draws a logic gate, either an AND or a NAND gate, depending whether the `invert` parameter is set in the constructor.
     """
 
     def __init__(self, position, width, height=None, invert=False):
+        """
+        Initialise an AND gate
+        Args:
+            position: Position of top right boundary of symbol. Tuple of numbers.
+            width: The width of the symbol. Number.
+            height: The height of the symbol. If `None` the symbol will use the default height for the supplied width.  Number.
+            invert: True if the gate is inverting, in which case a bobble is added to the output.
+        """
         super().__init__(position, width, height)
         self.bubble_radius = self.width/10
         self.invert = invert
@@ -93,10 +109,18 @@ class And(Symbol):
 
 class Or(Symbol):
     """
-    Draws a logic gate, either an OR or a NOR gate, depending whether the `invert` parameter is set in teh constructor.
+    Draws a logic gate, either an OR or a NOR gate, depending whether the `invert` parameter is set in the constructor.
     """
 
     def __init__(self, position, width, height=None, invert=False):
+        """
+        Initialise an OR gate
+        Args:
+            position: Position of top right boundary of symbol. Tuple of numbers.
+            width: The width of the symbol. Number.
+            height: The height of the symbol. If `None` the symbol will use the default height for the supplied width.  Number.
+            invert: True if the gate is inverting, in which case a bobble is added to the output.
+        """
         super().__init__(position, width, height)
         self.bubble_radius = self.width/10
         self.invert = invert
@@ -140,10 +164,18 @@ class Or(Symbol):
 
 class Xor(Symbol):
     """
-    Draws a logic gate, either an XOR or a XNOR gate, depending whether the `invert` parameter is set in teh constructor.
+    Draws a logic gate, either an XOR or a XNOR gate, depending whether the `invert` parameter is set in the constructor.
     """
 
     def __init__(self, position, width, height=None, invert=False):
+        """
+        Initialise an XOR gate
+        Args:
+            position: Position of top right boundary of symbol. Tuple of numbers.
+            width: The width of the symbol. Number.
+            height: The height of the symbol. If `None` the symbol will use the default height for the supplied width.  Number.
+            invert: True if the gate is inverting, in which case a bobble is added to the output.
+        """
         super().__init__(position, width, height)
         self.bubble_radius = self.width/10
         self.invert = invert

@@ -19,7 +19,7 @@ class Symbol(ABC):
     """
     def __init__(self, position, width, height=None):
         """
-        Initialise a symbol object.1
+        Initialise a symbol object
 
         Args:
             position: Position of top right boundary of symbol. Tuple of numbers.
@@ -55,6 +55,20 @@ class Symbol(ABC):
         return self
 
     def strokestyle(self, pattern=Color(0), line_width=1, dash=None, cap=SQUARE, join=MITER, miter_limit=None, style=None):
+        """
+        Sets the stroke style of the connector
+        Args:
+            pattern: Pattern to fill the line, normally a `Color` object. Alternatively, if a StrokeParameters object is supplied as a `pattern`, the style
+            will be taken from the StrokeParameters object and the remaining parameters will be ignored.
+            line_width: Width of connection line in userspace units, Number.
+            dash: Dash sequence as defined in generativepy.drawing module. Sequnce of numbers.
+            cap: Line cap as defined in generativepy.drawing module. Integer.
+            join:  Line join as defined in generativepy.drawing module. Integer.
+            miter_limit: Smallest angle that mitre join style can apply to. If mitre style is selected but the angle is too snale, bevel style wil be used instead.
+
+        Returns:
+            self
+        """
         if isinstance(pattern, StrokeParameters):
            self.strokeparams = pattern
         else:
