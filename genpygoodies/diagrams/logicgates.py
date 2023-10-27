@@ -4,7 +4,7 @@
 # License: MIT
 import math
 
-from generativepy.geometry import Polygon, Circle, Line, Transform
+from generativepy.geometry import Polygon, Circle, Line, Transform, Rectangle
 from generativepy.math import Vector as V
 
 from genpygoodies.diagrams.symbol import Symbol
@@ -223,6 +223,46 @@ class Xor(Symbol):
 
     def label_pos(self):
         return self.position + V(2*self.width/5, self.height/2)
+
+    def get_default_height(self):
+        return self.width
+
+class BoxItem(Symbol):
+    """
+    Draws a box with inputs and outputs, used for compound items like adders or flip-flops
+    """
+
+    def __init__(self, position, width, height=None, inputs=2, outputs=1):
+        """
+        Initialise the box item.
+        Future - decorate output/inputs with bubble, clock
+        Args:
+            position: Position of top right boundary of symbol. Tuple of numbers.
+            width: The width of the symbol. Number.
+            height: The height of the symbol. If `None` the symbol will use the default height for the supplied width.  Number.
+            inputs: input count. Inputs will be evenly distributed on left edge. Future - alternatively, list indicates positions of inputs
+            list length gives number of inputs.
+            outputs: output count. Outputs will be evenly distributed on left edge. Future - alternatively, list indicates positions of outputs
+            list length gives number of outputs.
+        """
+        super().__init__(position, width, height)
+        input_gap = self.height/inputs
+        output_gap = self.height/outputs
+        inputs = [V(0, input_gap*(i+0.5)) for i in range(inputs)]
+        outputs = [V(self.width, output_gap*(i+0.5)) for i in range(outputs)]
+        self._connectors = (inputs, outputs)
+
+    def draw(self, ctx):
+        (Rectangle(ctx)
+         .of_corner_size(self.position, self.width, self.height)
+         .fill(self.fillparams.pattern, self.fillparams.fill_rule)
+         .stroke(self.strokeparams.pattern, self.strokeparams.line_width, self.strokeparams.dash, self.strokeparams.cap, self.strokeparams.join,
+                 self.strokeparams.miter_limit)
+         )
+        return self
+
+    def label_pos(self):
+        return self.position + V(self.width/2, self.height/2)
 
     def get_default_height(self):
         return self.width
