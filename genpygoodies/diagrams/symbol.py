@@ -113,7 +113,7 @@ class Symbol(ABC):
         """
         Gets the position for placing a label.
 
-        For symbols that support a label, this wil return the position for the label. The label text should be centered on that point.
+        For symbols that support a label, this will return the position for the label. The label text should be centered on that point.
 
         **Returns**
 

@@ -262,26 +262,34 @@ class BoxItem(Symbol):
     Draws a box with inputs and outputs, used for compound items like adders or flip-flops
     """
 
-    def __init__(self, position, width, height=None, inputs=2, outputs=1):
+    def __init__(self, position, width, height=None, left_connections=2, right_connections=1, top_connections=0, bottom_connections=0):
         """
         Initialise the box item.
         Future - decorate output/inputs with bubble, clock
-            **Parameters**
+        
+        **Parameters**
 
-            position: Position of top right boundary of symbol. Tuple of numbers.
-            width: The width of the symbol. Number.
-            height: The height of the symbol. If `None` the symbol will use the default height for the supplied width.  Number.
-            inputs: input count. Inputs will be evenly distributed on left edge. Future - alternatively, list indicates positions of inputs
-            list length gives number of inputs.
-            outputs: output count. Outputs will be evenly distributed on left edge. Future - alternatively, list indicates positions of outputs
-            list length gives number of outputs.
+        `position`: (number, number) - Position of top right boundary of symbol.
+        `width`: number - The width of the symbol.
+        `height`: number - The height of the symbol. If `None` the symbol will use the default height for the supplied width.
+        `left_connections`: int - Number of connection points (usually inputs) on the left side of the box. Connections will be evenly distributed.
+        `right_connections`: int - Number of connection points (usually outputs) on the right side of the box. Connections will be evenly distributed.
+        `top_connections`: int - Number of connection points (usually inputs) on the top side of the box. Connections will be evenly distributed.
+        `bottom_connections`: int - Number of connection points (usually inputs) on the bottom side of the box. Connections will be evenly distributed.
+        **Returns**
+
+        self
         """
         super().__init__(position, width, height)
-        input_gap = self.height/inputs
-        output_gap = self.height/outputs
-        inputs = [V(0, input_gap*(i+0.5)) for i in range(inputs)]
-        outputs = [V(self.width, output_gap*(i+0.5)) for i in range(outputs)]
-        self._connectors = (inputs, outputs)
+        gap = self.height / left_connections if left_connections else 0
+        left = [V(0, gap * (i + 0.5)) for i in range(left_connections)]
+        gap = self.height / right_connections if right_connections else 0
+        right = [V(self.width, gap * (i + 0.5)) for i in range(right_connections)]
+        gap = self.width / top_connections if top_connections else 0
+        top = [V(gap * (i + 0.5), 0) for i in range(top_connections)]
+        gap = self.width / bottom_connections if bottom_connections else 0
+        bottom = [V(gap * (i + 0.5), self.height) for i in range(bottom_connections)]
+        self._connectors = (left, right, top, bottom)
 
     def draw(self, ctx):
         (Rectangle(ctx)
