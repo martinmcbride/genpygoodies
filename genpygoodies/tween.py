@@ -32,6 +32,7 @@ def tween_alpha_on(time, *times, off=0, on=1, fade=0.5):
     A configured `Tween` object.
 
     **Usage**
+
     This simple example creates a `Tween` that has value 0 for 2 seconds, then rises to 1 over 0.5 seconds, and stays at
     1 forever:
 

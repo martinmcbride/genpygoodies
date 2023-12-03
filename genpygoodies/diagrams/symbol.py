@@ -21,10 +21,15 @@ class Symbol(ABC):
         """
         Initialise a symbol object
 
-        Args:
-            position: Position of top right boundary of symbol. Tuple of numbers.
-            width: The width of the symbol. Number.
-            height: The height of the symbol. If `None` the symbol will use the default height for the supplied width.  Number.
+        **Parameters**
+
+        `position`: (number, number) - Position of top right boundary of symbol.
+        `width`: number - The width of the symbol.
+        `height`: number - The height of the symbol. If `None` the symbol will use the default height for the supplied width.
+
+        **Returns**
+
+        self
         """
         super().__init__()
         self.position = V(position)
@@ -38,15 +43,15 @@ class Symbol(ABC):
         """
         Sets the fill style for the symbol, using either a `FillParameters` object or a set of fill parameters.
 
-        Args:
-            pattern: If this parameter is a `FillParameters` object, then it will be used to determine the fill pattern and the remaining parameters will be
-                     ignored. If it is a `Pattern` object, then the patter will be used to fill the object and the remaining parameters will be used to control
-                    the style. `FillParameters` or `Pattern`
-            fill_rule: The fill rule to be used. Only used if `pattern` is a `Pattern` object. EVEN_ODD or WINDING
+        **Parameters**
 
-        Returns:
-            Self
+        * `pattern`: FillParameters` or `Pattern` - If this parameter is a `FillParameters` object, then it will be used to determine the fill pattern and the remaining parameters will be
+                     ignored. Otherwise the fill `Pattern` or `Color` to use. None for default.
+        * `fill_rule`: the fill rule to use, None for default.
 
+        **Returns**
+
+        self
         """
         if isinstance(pattern, FillParameters):
            self.fillparams = pattern
@@ -56,18 +61,21 @@ class Symbol(ABC):
 
     def strokestyle(self, pattern=Color(0), line_width=1, dash=None, cap=SQUARE, join=MITER, miter_limit=None, style=None):
         """
-        Sets the stroke style of the connector
-        Args:
-            pattern: Pattern to fill the line, normally a `Color` object. Alternatively, if a StrokeParameters object is supplied as a `pattern`, the style
-            will be taken from the StrokeParameters object and the remaining parameters will be ignored.
-            line_width: Width of connection line in userspace units, Number.
-            dash: Dash sequence as defined in generativepy.drawing module. Sequnce of numbers.
-            cap: Line cap as defined in generativepy.drawing module. Integer.
-            join:  Line join as defined in generativepy.drawing module. Integer.
-            miter_limit: Smallest angle that mitre join style can apply to. If mitre style is selected but the angle is too snale, bevel style wil be used instead.
+        Sets the stroke style of the symbol
 
-        Returns:
-            self
+        **Parameters**
+
+        * `pattern`:  the fill `Pattern` or `Color` to use for the outline, None for default. Alternatively, if a StrokeParameters
+        object is supplied as a `pattern`, the style will be taken from the StrokeParameters object and the remaining parameters will be ignored.
+        * `line_width`: width of stroke line. None for default
+        * dash`: sequence, dash patter of line. None for default
+        * cap`: line end style, None for default.
+        * join`: line join style, None for default.
+        * miter_limit`: mitre limit, number, None for default
+
+        **Returns**
+
+        self
         """
         if isinstance(pattern, StrokeParameters):
            self.strokeparams = pattern
@@ -85,11 +93,13 @@ class Symbol(ABC):
         Connectors are accessed by column and row, but the meaning of these depends on the type of symbol. For example, for the And gate symbol, column 0
         represents inputs, so the two inputs would be col 0 row 0 and col 0 row 1. Column 1 represents outputs so col 1 row 0 is the output.
 
-        Args:
-            col: The column index, integer
-            row: The row index, integer
+        **Parameters**
 
-        Returns:
+        `col`: int - The column index.
+        `row`: int - The row index.
+
+        **Returns**
+
         A Vector giving the position of the requestd connector. This will be specified relative to the user space that the symbol was created for.
         """
         if col < 0 or col >= len(self._connectors):
@@ -105,10 +115,10 @@ class Symbol(ABC):
 
         For symbols that support a label, this wil return the position for the label. The label text should be centered on that point.
 
-        Returns:
+        **Returns**
+
         A Vector giving the position for the label. This will be specified relative to the user space that the symbol was created for. If the symbol doesn't
         support labels this will return None.
-
         """
         ...
 
@@ -120,9 +130,9 @@ class Symbol(ABC):
 
         Symbol implementations should calculate the height in their `get_default_height` implementation.
 
-        Returns:
-        Return the height if it was set in the constructor, or a default height if it was not set.
+        **Returns**
 
+        Return the height if it was set in the constructor, or a default height if it was not set.
         """
         return self._fixed_height if self._fixed_height else self.get_default_height()
 
@@ -131,11 +141,9 @@ class Symbol(ABC):
         """
         Draw the symbol on the supplied drawing context
 
-        Args:
-            ctx: The drawing context, a PyCairo Context object.
+        **Parameters**
 
-        Returns:
-            None
+        `ctx`: PyCairo Context object - The drawing context.
         """
         ...
 
@@ -144,8 +152,9 @@ class Symbol(ABC):
         """
         Ths method should return the default height of the symbol. This will often depend on the s=width of teh symbol, `self.width`.
 
-        Returns:
-            The default height of the symbol, number.
+        **Returns**
+
+        The default height of the symbol, number.
         """
         ...
 

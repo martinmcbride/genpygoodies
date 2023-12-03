@@ -2,6 +2,12 @@
 # Created: 2023-07-29
 # Copyright (C) 2023, Martin McBride
 # License: MIT
+"""
+Contains symbols for
+
+* Simple logic gates such as AND, OR gates.
+* Block components such as flip-flops.
+"""
 import math
 
 from generativepy.geometry import Polygon, Circle, Line, Transform, Rectangle
@@ -17,11 +23,17 @@ class Buffer(Symbol):
     def __init__(self, position, width, height=None, invert=False):
         """
         Initialise a buffer object
-        Args:
-            position: Position of top right boundary of symbol. Tuple of numbers.
-            width: The width of the symbol. Number.
-            height: The height of the symbol. If `None` the symbol will use the default height for the supplied width.  Number.
-            invert: True if the gate is inverting, in which case a bobble is added to the output.
+        
+        **Parameters**
+
+        `position`: (number, number) - Position of top right boundary of symbol.
+        `width`: number - The width of the symbol.
+        `height`: number - The height of the symbol. If `None` the symbol will use the default height for the supplied width.
+        `invert`: bool - True if the gate is inverting, in which case a bobble is added to the output.
+        
+        **Returns**
+
+        self
         """
         super().__init__(position, width, height)
         self.bubble_radius = self.width/10
@@ -64,11 +76,17 @@ class And(Symbol):
     def __init__(self, position, width, height=None, invert=False):
         """
         Initialise an AND gate
-        Args:
-            position: Position of top right boundary of symbol. Tuple of numbers.
-            width: The width of the symbol. Number.
-            height: The height of the symbol. If `None` the symbol will use the default height for the supplied width.  Number.
-            invert: True if the gate is inverting, in which case a bobble is added to the output.
+
+        **Parameters**
+
+        `position`: (number, number) - Position of top right boundary of symbol.
+        `width`: number - The width of the symbol.
+        `height`: number - The height of the symbol. If `None` the symbol will use the default height for the supplied width.
+        `invert`: bool - True if the gate is inverting, in which case a bobble is added to the output.
+
+        **Returns**
+
+        self
         """
         super().__init__(position, width, height)
         self.bubble_radius = self.width/10
@@ -117,11 +135,17 @@ class Or(Symbol):
     def __init__(self, position, width, height=None, invert=False):
         """
         Initialise an OR gate
-        Args:
-            position: Position of top right boundary of symbol. Tuple of numbers.
-            width: The width of the symbol. Number.
-            height: The height of the symbol. If `None` the symbol will use the default height for the supplied width.  Number.
-            invert: True if the gate is inverting, in which case a bobble is added to the output.
+
+        **Parameters**
+
+        `position`: (number, number) - Position of top right boundary of symbol.
+        `width`: number - The width of the symbol.
+        `height`: number - The height of the symbol. If `None` the symbol will use the default height for the supplied width.
+        `invert`: bool - True if the gate is inverting, in which case a bobble is added to the output.
+
+        **Returns**
+
+        self
         """
         super().__init__(position, width, height)
         self.bubble_radius = self.width/10
@@ -173,11 +197,17 @@ class Xor(Symbol):
     def __init__(self, position, width, height=None, invert=False):
         """
         Initialise an XOR gate
-        Args:
-            position: Position of top right boundary of symbol. Tuple of numbers.
-            width: The width of the symbol. Number.
-            height: The height of the symbol. If `None` the symbol will use the default height for the supplied width.  Number.
-            invert: True if the gate is inverting, in which case a bobble is added to the output.
+
+        **Parameters**
+
+        `position`: (number, number) - Position of top right boundary of symbol.
+        `width`: number - The width of the symbol.
+        `height`: number - The height of the symbol. If `None` the symbol will use the default height for the supplied width.
+        `invert`: bool - True if the gate is inverting, in which case a bobble is added to the output.
+
+        **Returns**
+
+        self
         """
         super().__init__(position, width, height)
         self.bubble_radius = self.width/10
@@ -236,7 +266,8 @@ class BoxItem(Symbol):
         """
         Initialise the box item.
         Future - decorate output/inputs with bubble, clock
-        Args:
+            **Parameters**
+
             position: Position of top right boundary of symbol. Tuple of numbers.
             width: The width of the symbol. Number.
             height: The height of the symbol. If `None` the symbol will use the default height for the supplied width.  Number.
