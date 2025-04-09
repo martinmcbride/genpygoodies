@@ -5,6 +5,7 @@
 """
 Complex number related functionality
 """
+import logging
 
 import numpy as np
 from generativepy.color import ArtisticColorScheme, Color, make_colormap
@@ -33,6 +34,7 @@ def draw_overlay(ctx, pixel_width, pixel_height, frame_no, frame_count):
     Returns:
 
     """
+    logging.warning("Update complex.py to allow selection of FONT and cs")
     # Draw the text overlay (marking axes)
     setup(ctx, pixel_width, pixel_height, width=500, background=Color(1))
     a = V(58, 350)
