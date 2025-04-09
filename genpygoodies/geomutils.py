@@ -44,7 +44,7 @@ def LN(color):
     """
     return StrokeParameters(color, LW, cap=ROUND, join=ROUND)
 
-def DASH(color):
+def DASHED(color):
     """
     Stroke params for a dashed line of width LW
     Args:
@@ -55,7 +55,7 @@ def DASH(color):
     """
     return StrokeParameters(color, LW, cap=ROUND, join=ROUND, dash=[LW * 2, LW*2])
 
-def DOT(color):
+def DOTTED(color):
     """
     Stroke params for a dotted line of width LW
     Args:
