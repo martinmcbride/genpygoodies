@@ -14,8 +14,8 @@ apppear correct
 """
 import math
 
-from generativepy.drawing import ROUND
-from generativepy.geometry import Line, Marker, StrokeParameters
+from generativepy.drawing import ROUND, BOTTOM, TOP, LEFT, RIGHT, CENTER, MIDDLE
+from generativepy.geometry import Line, Marker, StrokeParameters, Circle, Text
 from generativepy.math import Vector as V
 
 FONT = "DejaVu Sans"    # Default font
@@ -31,7 +31,7 @@ ANGLE_RADIUS = 40       # Default angle marker radius
 ANGLE_RADIUS_SMALL = 30 # Smaller angle marker radius
 ANGLE_GAP = 10          # Gap between multiple angle markers
 TEXT_SIZE = 30          # Default text size for label text
-TO = 20                 # Nominal text offset from point
+TO = 10                 # Nominal text offset from point
 
 def LN(color):
     """
@@ -65,6 +65,12 @@ def DOTTED(color):
 
     """
     return StrokeParameters(color, LW, cap=ROUND, join=ROUND, dash=[0, LW * 2])
+
+def dot(ctx, p, color, radius=DOT):
+    """
+    Draw a dot
+    """
+    Circle(ctx).of_center_radius(p, radius).fill(color)
 
 
 def extended_line(ctx, a, b, ext, stroke_params):
@@ -111,3 +117,58 @@ def intersection(p1, p2, p3, p4):
     x = ((x1*y2 - y1*x2)*(x3 - x4) - (x1 - x2)*(x3*y4 - y3*x4))/((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4))
     y = ((x1*y2 - y1*x2)*(y3 - y4) - (y1 - y2)*(x3*y4 - y3*x4))/((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4))
     return V(x, y)
+
+def text_align_for_angle(angle):
+    """
+    If text is offset from a point by and angle, the tex must be correctly aligned. For example, if text is displaced at 45 degrees
+    clockwise from _ve x axis, the top left of the text should be aligned to the offset point.
+
+    Args:
+        angle: float, angle of text offset in radians, clockwise from +ve x axis.
+
+    Returns:
+        (halign, valign) the horizontal nd vertical text align, eg (LEFT, TOP) defined in `generativepy.drawing`.
+
+    """
+    angle = -math.degrees(angle)
+
+    if angle > 5 and angle < 175:
+        valign = BOTTOM
+    elif angle < -5 and angle > -175:
+        valign = TOP
+    else:
+        valign = MIDDLE
+
+    if angle > -85 and angle < 85:
+        halign = LEFT
+    elif angle > 95 or angle < -95:
+        halign = RIGHT
+    else:
+        halign = CENTER
+
+    return halign, valign
+
+def label_line(ctx, text, a, b, color, offset=TO, font=FONT, size=TEXT_SIZE):
+    """
+    Places a text label near the midpoint of a line.
+
+    Args:
+        ctx: The graphics context
+        text: str, the text
+        a: Vector, the start point of the line
+        b:  Vector, the start point of the line
+        color: Color, the colour of the text
+        offset: float, the offset distance
+        font: font, the font to use
+        size: float, the text size
+
+    Returns:
+        None
+
+    """
+    origin = (a + b) / 2
+    displacement = ortho_angle(a, b)
+    halign, valign = text_align_for_angle((displacement - origin).angle)
+
+    Text(ctx).of(text, origin).offset_towards(displacement, offset).size(size).font(font).align(halign, valign).fill(color)
+
