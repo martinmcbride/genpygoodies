@@ -191,7 +191,6 @@ def label_point(ctx, text, p, angle, color, offset=TO, font=FONT, size=TEXT_SIZE
         None
 
     """
-    angle = math.atan2(math.sin(angle),math.cos(angle)) # Normalise angle to +/pi
     halign, valign = text_align_for_angle(angle)
     Text(ctx).of(text, p).offset_angle(angle, offset).size(size).font(font).align(halign, valign).fill(color)
 
