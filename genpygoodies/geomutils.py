@@ -130,6 +130,7 @@ def text_align_for_angle(angle):
         (halign, valign) the horizontal nd vertical text align, eg (LEFT, TOP) defined in `generativepy.drawing`.
 
     """
+    angle = math.atan2(math.sin(angle),math.cos(angle)) # Normalise angle to +/pi
     angle = -math.degrees(angle)
 
     if angle > 5 and angle < 175:
@@ -171,4 +172,26 @@ def label_line(ctx, text, a, b, color, offset=TO, font=FONT, size=TEXT_SIZE):
     halign, valign = text_align_for_angle((displacement - origin).angle)
 
     Text(ctx).of(text, origin).offset_towards(displacement, offset).size(size).font(font).align(halign, valign).fill(color)
+
+def label_point(ctx, text, p, angle, color, offset=TO, font=FONT, size=TEXT_SIZE):
+    """
+    Places a text label near a point.
+
+    Args:
+        ctx: The graphics context
+        text: str, the text
+        p: Vector, the start point of the line
+        angle:  angle of offset direction, clockwise from  +ve x direction
+        color: Color, the colour of the text
+        offset: float, the offset distance
+        font: font, the font to use
+        size: float, the text size
+
+    Returns:
+        None
+
+    """
+    angle = math.atan2(math.sin(angle),math.cos(angle)) # Normalise angle to +/pi
+    halign, valign = text_align_for_angle(angle)
+    Text(ctx).of(text, p).offset_angle(angle, offset).size(size).font(font).align(halign, valign).fill(color)
 
