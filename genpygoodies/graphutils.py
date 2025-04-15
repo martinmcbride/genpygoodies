@@ -24,10 +24,10 @@ def style_axes(axes, cs):
         axes: generativepy.graph.Axes, the axes
         cs: A color space
     """
-    (axes.background(cs.WHITE).axis_linestyle(cs.GREY, line_width=2.5)
-                              .division_linestyle(cs.GREY.light2, line_width=2.5)
-                              .subdivision_linestyle(cs.GREY.light2, line_width=2.5)
-                              .text_color(cs.GREY))
+    (axes.background(cs.WHITE).axis_linestyle(cs.GREY.dark1, line_width=2.5)
+                              .division_linestyle(cs.GREY.light1, line_width=2.5)
+                              .subdivision_linestyle(cs.GREY.light1, line_width=2.5)
+                              .text_color(cs.GREY.dark1))
 
 def i_formater(value, div):
     """
@@ -82,7 +82,7 @@ def style_blank(axes, cs):
     axes.with_division_formatters(x_div_formatter=blank_formater, y_div_formatter=blank_formater)
 
 
-def create_axes(ctx, position=(20, 20), width=460, height=460):
+def create_axes(ctx, position=(50, 50), width=400, height=400):
     """
     Creates axes with size and location. The default values create axes that are centered within a 500 by 500 drawing space
     Args:
