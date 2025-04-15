@@ -16,9 +16,10 @@ from generativepy.formulas import rasterise_formula
 from generativepy.tween import Tween
 from generativepy.geometry import Image
 
-_FORMULA_INDEX = 0 # Global index used to create temp filenames for formulas. Increment after each use
+_FORMULA_INDEX = 0  # Global index used to create temp filenames for formulas. Increment after each use
 
-def make_formulas_png(filepath, formulas, color, dpi=600, gap=50, background=Color(1), packages=None):
+
+def make_formulas_png(filepath, formulas, color, dpi=600, gap=50, background=Color(1), packages=None, padwidth=None):
     """
     Create a PNG image of a list of latex formulas.
 
@@ -32,6 +33,7 @@ def make_formulas_png(filepath, formulas, color, dpi=600, gap=50, background=Col
     * `dpi`: number - Controls formula size. See formula module of generativepy documentation.
     * `gap`: number - Controls the width of the border around the edge of the formulas, and also the horizontal gap between the formulas.
     * `packages`: sequence of str - tuple containing any required additional latex packages
+    * `padwidth`: int or None - if present, the output image will be right-padded to a minimum width of padwidth, filled with background color
 
     **Returns**
 
@@ -45,8 +47,11 @@ def make_formulas_png(filepath, formulas, color, dpi=600, gap=50, background=Col
 
     images, sizes = zip(*[rasterise_formula(name, formula, color, dpi=dpi, packages=packages) for name, formula in zip(names, formulas)])
 
-    height = sum([size[1] for size in sizes]) + (formula_count + 1)*gap
-    width = max([size[0] for size in sizes]) + 2*gap
+    height = sum([size[1] for size in sizes]) + (formula_count + 1) * gap
+    width = max([size[0] for size in sizes]) + 2 * gap
+
+    if padwidth is not None and width < padwidth:
+        width = padwidth
 
     def draw(ctx, pixel_width, pixel_height, fn, frame_count):
         setup(ctx, pixel_width, pixel_height, background=background)
@@ -58,7 +63,6 @@ def make_formulas_png(filepath, formulas, color, dpi=600, gap=50, background=Col
 
     make_image(filepath, draw, width, height)
     return width, height
-
 
 
 class formula_zoom_in():
@@ -139,7 +143,9 @@ class formula_zoom_in():
         Call this in the draw function of every frame where the formula should appear.
         """
         if self.alpha[fn]:
-            Image(ctx).of_file_position(self.image, (self.position[0] - self.size[0] * self.scale[fn] / 2, self.position[1] - self.size[1] * self.scale[fn] / 2)).scale(self.scale[fn]).paint()
+            Image(ctx).of_file_position(self.image, (self.position[0] - self.size[0] * self.scale[fn] / 2, self.position[1] - self.size[1] * self.scale[fn] / 2)).scale(
+                self.scale[fn]).paint()
+
 
 class formula_fade_in():
 
