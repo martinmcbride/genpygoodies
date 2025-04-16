@@ -3,9 +3,9 @@ import unittest
 
 from generativepy.color import Color
 from generativepy.drawing import make_image, setup
-from generativepy.geometry import Polygon, Transform, Circle
+from generativepy.geometry import Polygon, Transform, Circle, Line
 from generativepy.math import Vector as V
-from genpygoodies.geomutils import LN, label_line, label_point
+from genpygoodies.geomutils import LN, label_line, label_point, label_angle, TO
 
 from image_test_helper import run_image_test
 
@@ -46,4 +46,25 @@ class TestGeomutils(unittest.TestCase):
             make_image(file, draw, 700, 500)
 
         self.assertTrue(run_image_test('test_label_point.png', creator))
+
+    def test_label_angle(self):
+
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+            for i in range(16):
+                x = 200 + (i%4) * 200
+                y = 200 + (i//4) * 200
+                ang1 = (i-1)*math.pi/8
+                ang2 = (i + 1)*math.pi/8
+                b = V(x, y)
+                a = b + V.polar(100, ang1)
+                c = b + V.polar(100, ang2)
+                Line(ctx).of_start_end(b, a).stroke(Color(0), 2)
+                Line(ctx).of_start_end(b, c).stroke(Color(0), 2)
+                label_angle(ctx, f"x", a, b, c, Color(0), offset=5*TO)
+
+        def creator(file):
+            make_image(file, draw, 1000, 1000)
+
+        self.assertTrue(run_image_test('test_label_angle.png', creator))
 

@@ -194,3 +194,26 @@ def label_point(ctx, text, p, angle, color, offset=TO, font=FONT, size=TEXT_SIZE
     halign, valign = text_align_for_angle(angle)
     Text(ctx).of(text, p).offset_angle(angle, offset).size(size).font(font).align(halign, valign).fill(color)
 
+def label_angle(ctx, text, a, b, c, color, offset=TO, font=FONT, size=TEXT_SIZE):
+    """
+    Places a label near an angle. This usually only works well for a single character angle label, because it aligns the centre of the
+    label string. For longer angle names it is usually necessary to place the text manually.
+
+    Args:
+        ctx: The graphics context
+        text: str, the text
+        a: Point defining the angle
+        b: Point defining the angle
+        c: Point defining the angle
+        color: Color, the colour of the text
+        offset: float, the offset distance
+        font: font, the font to use
+        size: float, the text size
+
+    Returns:
+
+    """
+    mid = mid_angle(a, b, c)
+    angle = (mid - b).angle
+    Text(ctx).of(text, b).offset_angle(angle, offset).size(size).font(font).align(CENTER, MIDDLE).fill(color)
+#    label_point(ctx, text, b, angle, color, offset, font, size)
