@@ -68,3 +68,30 @@ class TestGeomutils(unittest.TestCase):
 
         self.assertTrue(run_image_test('test_label_angle.png', creator))
 
+    def test_label_angle_degrees(self):
+
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+            adjust = [
+            V(0, 0), V(0, -5), V(5, 0), V(5, 5),
+            V(0, 5), V(0, 0), V(0, 0), V(0, 0),
+            V(0, 0), V(0, 5), V(0, 0), V(0, 0),
+            V(5, 0), V(5, 0), V(5, 0), V(0, 5),
+            ]
+            for i in range(16):
+                x = 200 + (i%4) * 200
+                y = 200 + (i//4) * 200
+                ang1 = (i-1)*math.pi/8
+                ang2 = (i + 1)*math.pi/8
+                b = V(x, y)
+                a = b + V.polar(100, ang1)
+                c = b + V.polar(100, ang2)
+                Line(ctx).of_start_end(b, a).stroke(Color(0), 2)
+                Line(ctx).of_start_end(b, c).stroke(Color(0), 2)
+                label_angle(ctx, f"30°", a, b, c, Color(0), offset=7*TO, adjust=adjust[i])
+
+        def creator(file):
+            make_image(file, draw, 1000, 1000)
+
+        self.assertTrue(run_image_test('test_label_angle_degrees.png', creator))
+
