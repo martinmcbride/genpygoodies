@@ -19,7 +19,7 @@ from generativepy.geometry import Image
 _FORMULA_INDEX = 0  # Global index used to create temp filenames for formulas. Increment after each use
 
 
-def make_formulas_png(filepath, formulas, color, dpi=600, gap=50, background=Color(1), packages=None, padwidth=None):
+def make_formulas_png(filepath, formulas, color, dpi=600, gap=50, background=Color(1), packages=None, padwidth=None, channels=3):
     """
     Create a PNG image of a list of latex formulas.
 
@@ -61,7 +61,7 @@ def make_formulas_png(filepath, formulas, color, dpi=600, gap=50, background=Col
             Image(ctx).of_file_position(image, (gap, ypos)).paint()
             ypos += size[1] + gap
 
-    make_image(filepath, draw, width, height)
+    make_image(filepath, draw, width, height, channels=channels)
     return width, height
 
 
