@@ -82,7 +82,7 @@ def style_blank(axes, cs):
     axes.with_division_formatters(x_div_formatter=blank_formater, y_div_formatter=blank_formater)
 
 
-def create_axes(ctx, position=(50, 50), width=400, height=400):
+def create_axes(ctx, position=(50, 50), width=400, height=400, tight=False):
     """
     Creates axes with size and location. The default values create axes that are centered within a 500 by 500 drawing space
     Args:
@@ -90,8 +90,14 @@ def create_axes(ctx, position=(50, 50), width=400, height=400):
         width: number, the width of the graph
         height:  number, the height of the graph
         position: (number, number), the position of the top left of the graph
+        tight: if true, for axes to have border of 20. This will override custom values for position and size
 
     Returns:
         The axes
     """
+    if tight:
+        position=(20, 20)
+        width=460
+        height=460
+
     return Axes(ctx, position, width, height)
